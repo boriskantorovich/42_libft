@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memleaks.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
+/*   By: boriskantorovich <boriskantorovich@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/13 18:12:59 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/15 12:38:53 by dfisher          ###   ########.fr       */
+/*   Updated: 2019/07/16 16:06:56 by boriskantor      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	ft_bzero_test(void *s, size_t n)
 }
 
 
+
 void	ft_lstdel_test(t_list **alst, void (*del)(void *, size_t))
 {
 	t_list *next;
@@ -119,6 +120,46 @@ void	ft_lstdelone_test(t_list **alst, void (*del)(void *, size_t))
 	printf("## FINISHED DEL\n");
 	printf("AFTER DEL\n");
 	printf("alst adress		%p\n", alst);
+}
+
+static void	ft_lstdel_elem(void *content, size_t content_size)
+{
+	if (content)
+	{
+		(void)content_size;
+		free(content);
+	}
+}
+
+t_list	*ft_change_content_once_and_return(t_list *elem)
+{
+	if (elem)
+		elem->content = "new content";
+	return (elem);
+}
+
+t_list		*ft_lstmap_test(t_list *lst, t_list *(*f)(t_list *elem))
+{
+	t_list		*list;
+	t_list		*ptr_list;
+	t_list		*prev_list;
+
+	if (!(lst) || !(f))
+		return (NULL);
+	list = f(lst);
+	ptr_list = list;
+	prev_list = list;
+	while (lst->next)
+	{
+		lst = lst->next;
+		if (!(prev_list->next = f(lst)))
+		{
+			ft_lstdel(&ptr_list, &ft_lstdel_elem);
+			return (NULL);
+		}
+		prev_list = prev_list->next;
+	}
+	return (ptr_list);
 }
 
 int	main(void)
@@ -223,20 +264,42 @@ int	main(void)
 	printf("L3 content adress	%p\n", &test_del->next->next->content);
 	printf("L3 content_size		%zu\n", test_del->next->next->content_size);
 	printf("L4 adress		%p\n", test_del->next->next->next);
-	ft_lstdelone_test(&test_del->next, ft_bzero_test);
-	printf("AFTER DEL\n");
+	t_list *test_child_alive_after_parent_death = test_del->next->next;
+	printf("DELETING LEVEL 2, BUT NOT LEVEL 3\n");
+	ft_lstdelone(&test_del->next, ft_bzero);
 	printf("L1 adress		%p\n", test_del);
 	printf("L1 content		%s\n", test_del->content);
 	printf("L1 content adress	%p\n", &test_del->content);
 	printf("L1 content_size		%zu\n", test_del->content_size);
 	printf("L1 content_size adress	%p\n", &test_del->content_size);
-	//printf("L2 adress		%p\n", test_del->next);
-	printf("L3 adress		%p\n", test_del->next->next);
-	printf("L3 content		%s\n", test_del->next->next->content);
-	printf("L3 content adress	%p\n", &test_del->next->next->content);
-	printf("L3 content_size		%zu\n", test_del->next->next->content_size);
-	printf("L4 adress		%p\n", test_del->next->next->next);
-	/*ft_lstdelone_test(&(test->next), ft_bzero);
+	printf("L2 adress (test_del->next == NULL)	%p\n", test_del->next);
+	printf("But it's child still alive. Here is the adress		%p\n", test_child_alive_after_parent_death);
+	printf("test_child_alive_after_parent_death content 	%s\n", test_child_alive_after_parent_death->content);
+	printf("test_child_alive_after_parent_death content_size		%zu\n", test_child_alive_after_parent_death->content_size);
+	printf("test_child_alive_after_parent_death next		%p\n", test_child_alive_after_parent_death->next);
+	t_list *test_mapped = ft_lstmap_test(test, ft_change_content_once_and_return);
+	printf("NEW LIST MAP DEL\n");
+	printf("L1 adress		%p\n", test_mapped);
+	printf("L1 content		%s\n", test_mapped->content);
+	printf("L1 content_size		%zu\n", test_mapped->content_size);
+	printf("L2 adress		%p\n", test_mapped->next);
+	printf("L2 content		%s\n", test_mapped->next->content);
+	printf("L2 content_size		%zu\n", test_mapped->next->content_size);
+	printf("L3 adress		%p\n", test_mapped->next->next);
+	printf("L3 content		%s\n", test_mapped->next->next->content);
+	printf("L3 content_size		%zu\n", test_mapped->next->next->content_size);
+	/*printf("DELETING THE WHOLE LIST\n");
+	printf("BEFORE DEL\n");
+	printf("L1 adress		%p\n", test);
+	printf("L1 content		%s\n", test->content);
+	printf("L1 content_size		%zu\n", test->content_size);
+	printf("L2 adress		%p\n", test->next);
+	printf("L2 content		%s\n", test->next->content);
+	printf("L2 content_size		%zu\n", test->next->content_size);
+	printf("L3 adress		%p\n", test->next->next);
+	printf("L3 content		%s\n", test->next->next->content);
+	printf("L3 content_size		%zu\n", test->next->next->content_size);
+	ft_lstdel(&test, ft_bzero);
 	printf("AFTER DEL\n");
 	printf("L1 adress		%p\n", test);
 	printf("L1 content		%s\n", test->content);
@@ -247,12 +310,13 @@ int	main(void)
 	printf("L3 adress		%p\n", test->next->next);
 	printf("L3 content		%s\n", test->next->next->content);
 	printf("L3 content_size		%zu\n", test->next->next->content_size);
-*/
 	//ft_lstiter(test, tolower(l));
 	//printf("%s", sample_content);
 	//printf("%s", sample_content);
-	return (0);
+	
 	//ft_bzero(result, size);
 	//return (result);
 	//ft_memalloc(size_max);
+	*/
+	return (0);
 }
