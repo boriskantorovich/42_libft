@@ -6,14 +6,14 @@
 #    By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/06/26 18:02:18 by dfisher           #+#    #+#              #
-#    Updated: 2019/07/13 22:02:42 by dfisher          ###   ########.fr        #
+#    Updated: 2019/07/17 12:38:32 by dfisher          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = a.out
 CC = gcc
 CCFLAGS = -Wall -Werror -Wextra
-SRCS = 	memleaks.c ../libft/libft.a
+SRCS = 	test.c ../libft/libft.a
 OBJ = ${SRC:.c=.o}
 INCLUDES = ../libft/includes/
 OPTIONS = -g $(SRCS) -I $(INCLUDES)

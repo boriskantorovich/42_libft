@@ -6,7 +6,7 @@
 #    By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/06/26 18:02:18 by dfisher           #+#    #+#              #
-#    Updated: 2019/07/13 17:08:31 by dfisher          ###   ########.fr        #
+#    Updated: 2019/07/17 13:42:47 by dfisher          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,12 +70,14 @@ SRCS = ft_atoi.c \
 		ft_strnlen.c \
 		ft_strnstr.c \
 		ft_strrchr.c \
+		ft_strset.c \
 		ft_strsplit.c \
 		ft_strstr.c \
 		ft_strsub.c \
 		ft_strtrim.c \
 		ft_tolower.c \
-		ft_toupper.c
+		ft_toupper.c \
+		ft_strsplit_lstmode.c
 OBJ = ${SRCS:%.c=%.o}
 SRC = $(addprefix src/, $(SRCS))
 INCLUDES = includes/

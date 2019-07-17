@@ -6,7 +6,7 @@
 /*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/25 11:21:13 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/13 20:21:35 by dfisher          ###   ########.fr       */
+/*   Updated: 2019/07/17 14:15:35 by dfisher          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,35 +18,29 @@
 ** of f. If the allocation fails, the function returns NULL.
 */
 
-static void	ft_lstdel_elem(void *content, size_t content_size)
+t_list	*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
 {
-	if (content)
-	{
-		(void)content_size;
-		free(content);
-	}
-}
-
-t_list		*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
-{
-	t_list		*list;
+	t_list		*result;
 	t_list		*ptr_list;
-	t_list		*prev_list;
+	t_list		*elem;
 
-	if (!(lst) || !(f))
+	if (!lst || !f)
 		return (NULL);
-	list = f(lst);
-	ptr_list = list;
-	prev_list = list;
-	while (lst->next)
+	elem = f(lst);
+	if (!(result = ft_lstnew(elem->content, elem->content_size)))
+		return (NULL);
+	lst = lst->next;
+	ptr_list = result;
+	while (lst)
 	{
-		lst = lst->next;
-		if (!(prev_list->next = f(lst)))
+		elem = f(lst);
+		if (!(result->next = ft_lstnew(elem->content, elem->content_size)))
 		{
-			ft_lstdel(&ptr_list, &ft_lstdel_elem);
+			ft_lstdel(&ptr_list, ft_bzero);
 			return (NULL);
 		}
-		prev_list = prev_list->next;
+		result = result->next;
+		lst = lst->next;
 	}
 	return (ptr_list);
 }

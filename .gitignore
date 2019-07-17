@@ -4,6 +4,9 @@
 *.out
 *.dSYM/
 
+# ignore swaps
+*.swp
+
 # ignore MaxOS Desktop Services Store
 *.DS_Store
 

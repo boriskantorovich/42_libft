@@ -6,7 +6,7 @@
 /*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/25 11:10:58 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/13 20:20:20 by dfisher          ###   ########.fr       */
+/*   Updated: 2019/07/17 12:22:34 by dfisher          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ char			*ft_strtrim(char const *s)
 		return (NULL);
 	while (++i < (size_and_offset[0] - 1))
 		*(result + i) = *(s + size_and_offset[1] + i);
-	free(size_and_offset);
 	*(result + i) = '\0';
 	return (result);
 }

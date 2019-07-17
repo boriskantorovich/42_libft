@@ -1,16 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strsplit.c                                      :+:      :+:    :+:   */
+/*   ft_strsplit_lstmode.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/06/25 11:10:45 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/17 14:29:08 by dfisher          ###   ########.fr       */
+/*   Created: 2019/07/17 12:51:39 by dfisher           #+#    #+#             */
+/*   Updated: 2019/07/17 13:51:59 by dfisher          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 
 /*
 ** Allocates (with malloc(3)) and returns an array of “fresh” strings (all
@@ -19,6 +18,8 @@
 ** NULL. Example : ft_strsplit("*hello*fellow***students*", ’*’) re- turns the
 ** array ["hello", "fellow", "students"].
 */
+
+#include "libft.h"
 
 static int	ft_wordscounter(const char *s, char c)
 {
@@ -44,7 +45,7 @@ static int	ft_wordscounter(const char *s, char c)
 	return (index);
 }
 
-static int	ft_ln(const char *s, char c)
+static size_t	ft_ln(const char *s, char c)
 {
 	int index;
 
@@ -54,48 +55,43 @@ static int	ft_ln(const char *s, char c)
 	return (index);
 }
 
-static void	*ft_strdel_strsplit_mode(char **arr, int size)
+t_list		*ft_strsplit_lstmode(char const *s, char c)
 {
-	size -= 1;
-	if (arr && *arr)
-	{
-		while (size >= 0)
-		{
-			free(arr[size]);
-			arr[size] = NULL;
-			size--;
-		}
-		free(arr);
-		arr = NULL;
-	}
-	return (NULL);
-}
-
-char		**ft_strsplit(char const *s, char c)
-{
-	char	**result;
+	t_list	*result;
+	t_list	*ptr_result;
+	char	*temp;
 	int		i;
 	int		j;
+	size_t	words_count;
 
-	if (!s || !(result = \
-				(char **)malloc((ft_wordscounter(s, c) + 1) * sizeof(char *))))
+	if (!s || !(result = ft_lstnew(NULL, 0)))
 		return (NULL);
 	i = 0;
-	while (*s)
+	ptr_result = result;
+	words_count = ft_wordscounter(s, c);
+	while (*s && words_count)
 	{
 		if (*s != c && *s)
 		{
 			j = 0;
-			if (!(result[i] = (char *)malloc((ft_ln(s, c) + 1) * sizeof(char))))
-				return (ft_strdel_strsplit_mode(result, i));
+			if (!(temp = (char *)malloc((ft_ln(s, c) + 1) * sizeof(char))))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
 			while (*s != c && *s)
-				*(*(result + i) + j++) = *(s++);
+				*(temp + j++) = *(s++);
+			*(temp+ j) = '\0';
+			if (!(result = ft_lstnew(temp, ft_ln(s, c))))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
+			result = result->next;
+			words_count--;
 			s--;
-			*(*(result + i) + j) = '\0';
-			i++;
 		}
 		s++;
 	}
-	*(result + i) = NULL;
-	return (result);
+	return (ptr_result);
 }
