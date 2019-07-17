@@ -1,0 +1,11 @@
+# ignore object files, lib and debug files
+*.o
+*.a
+*.out
+*.dSYM/
+
+# ignore MaxOS Desktop Services Store
+*.DS_Store
+
+# ignore Visual Studio Code files
+*.vscode/
