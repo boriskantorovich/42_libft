@@ -6,7 +6,7 @@
 /*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/13 18:12:59 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/18 11:04:36 by dfisher          ###   ########.fr       */
+/*   Updated: 2019/07/18 13:15:05 by dfisher          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,44 @@ t_list		*ft_strsplit_lstmode_test(char const *s, char c)
 	return (ptr_result);
 }
 */
+		/*len = ft_ln(s, c) + 1;
+		if (!(temp = (char *)malloc(len * sizeof(char))))
+		{
+			ft_lstdel(&result, ft_bzero);
+			return (NULL);
+		}
+
+		if (!(result = ft_lstnew(temp, len + 1)))
+		{
+			ft_lstdel(&ptr_result, ft_bzero);
+			return (NULL);
+		}
+		*/
+t_list		*ft_strslpit_first_word(char const *s, char c)
+{
+	t_list	*result;
+	char	*temp;
+	int		j;
+	size_t	len;
+
+	if (!(result = ft_lstnew(NULL, 0)))
+		return (NULL);
+	if (*s != c && *s)
+	{
+		j = 0;
+		len = ft_ln(s, c) + 1;
+		if (!(temp = (char *)malloc(len * sizeof(char))))
+			return (NULL);
+		if (!(result = ft_lstnew(temp, len)))
+			return (NULL);
+		while (*s != c && *s)
+			*(temp + j++) = *(s++);
+		*(temp + j) = '\0';
+		result->content = temp;
+		free(temp);
+	}
+	return (result);
+}
 
 t_list		*ft_strsplit_lstmode(char const *s, char c)
 {
@@ -325,59 +363,80 @@ t_list		*ft_strsplit_lstmode(char const *s, char c)
 	}
 	if (!*s)
 		return (NULL);
-	if (!(result = ft_lstnew(NULL, 0)))
-			return (NULL);
-	if (*s != c && *s)
-	{
-		while (*s && *s != c)
-		{
-			if (*s != c && *s)
-			{
-				j = 0;
-				len = ft_ln(s, c) + 1;
-				if (!(temp = (char *)malloc(len * sizeof(char))))
-				{
-					ft_lstdel(&result, ft_bzero);
-					return (NULL);
-				}
-				if (!(result = ft_lstnew(temp, len)))
-				{
-					ft_lstdel(&ptr_result, ft_bzero);
-					return (NULL);
-				}
-				while (*s != c && *s)
-					*(temp + j++) = *(s++);
-				*(temp + j) = '\0';
-				result->content = temp;
-			}
-		}
-	}
+	if (!(result = ft_strslpit_first_word(s, c)))
+		return (NULL);
 	ptr_result = result;
-	while (*s)
+	printf("===PTR1111===\n");
+	printf("Adress of node:		%p\n", ptr_result);
+	printf("Word:			%s\n",  ptr_result->content);
+	printf("Size of word:		%zu\n", ptr_result->content_size);
+	printf("Adress of next node:		%p\n", ptr_result->next);
+	printf("===RESULT111===\n");
+			printf("Adress of node:		%p\n", result);
+			printf("Word:			%s\n",  result->content);
+			printf("Size of word:		%zu\n", result->content_size);
+			printf("Adress of result-next:		%p\n", result->next);
+	while (*s!= c && *s)
+		s++;
+	int i = 0;
+	while (*s && i++ < 7)
 	{
-		if (*s != c && *s)
+
+		if (*s != c)
 		{
+			printf("====INSIDE IF====\n");
+			printf("===RESULT1===\n");
+			printf("Adress of node:		%p\n", result);
+			printf("Word:			%s\n",  result->content);
+			printf("Size of word:		%zu\n", result->content_size);
+			printf("Adress of result-next:		%p\n", result->next);
 			j = 0;
-			len = ft_ln(s, c) + 1;
-			if (!(temp = (char *)malloc(len * sizeof(char))))
+			len = ft_ln(s, c);
+			temp = ft_strnew(len);
+			/*if (temp == NULL)
 			{
 				ft_lstdel(&ptr_result, ft_bzero);
 				return (NULL);
-			}
-			if (!(result->next = ft_lstnew(temp, len)))
-			{
-				ft_lstdel(&ptr_result, ft_bzero);
-				return (NULL);
-			}
+			}*/
+			printf("===RESULT2===\n");
+			printf("Adress of node:		%p\n", result);
+			printf("Word:			%s\n",  result->content);
+			printf("Size of word:		%zu\n", result->content_size);
+			printf("Adress of result-next:		%p\n", result->next);
 			while (*s != c && *s)
 				*(temp + j++) = *(s++);
+					printf("===RESULT2,5===\n");
+			printf("Adress of node:		%p\n", result);
+			printf("Word:			%s\n",  result->content);
+			printf("Size of word:		%zu\n", result->content_size);
+			printf("Adress of result-next:		%p\n", result->next);
 			*(temp + j) = '\0';
+			printf("===RESULT3===\n");
+			printf("Adress of node:		%p\n", result);
+			printf("Word:			%s\n",  result->content);
+			printf("Size of word:		%zu\n", result->content_size);
+			printf("Adress of result-next:		%p\n", result->next);
+			if (!(result->next = ft_lstnew(temp, len + 1)))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
+			printf("===RESULT4===\n");
+			printf("Adress of node:		%p\n", result);
+			printf("Word:			%s\n",  result->content);
+			printf("Size of word:		%zu\n", result->content_size);
+			printf("Adress of result-next:		%p\n", result->next);
 			result = result->next;
-			result->content = temp;
 			s--;
 		}
 		s++;
 	}
+	printf("=====PTR_RESULT========\n");
+	printf("ptr_result IN FN	%p\n", ptr_result);
+	printf("Adress of node:		%p\n", ptr_result);
+	printf("Word:			%s\n",  ptr_result->content);
+	printf("Size of word:		%zu\n", ptr_result->content_size);
+	printf("Adress of node:		%p\n", ptr_result->next);
 	return (ptr_result);
 }
 
@@ -796,7 +855,7 @@ int	main(void)
 	}
 	*/
 	char new[6][100] = {
-		"asdff\0adshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk",
+		"asdffadshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk",
 		"",
 		"***dddd****",
 		"***",
@@ -814,14 +873,14 @@ int	main(void)
 	int i = 0;
 	int k;
 	int j;
-	while (i < 6)
+	while (i < 1)
 	{
 		t_list *strsplit;
 		j = 0;
-		while (j < 6)
+		while (j < 1)
 		{
-			printf("\n\nTEST of %s #%d\n", new[i], j);
-			k = 0;
+			printf("\n\nMAIN TEST of %s #%d\n", new[i], j);
+			k = 1;
 			printf("char to split with:		%c\n", chars[j]);
 			strsplit = ft_strsplit_lstmode(new[i], chars[j]);
 			printf("RESULT\n");
