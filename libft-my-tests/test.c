@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
+/*   By: boriskantorovich <boriskantorovich@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/13 18:12:59 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/17 14:51:45 by dfisher          ###   ########.fr       */
+/*   Updated: 2019/07/18 07:52:16 by boriskantor      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,75 +246,63 @@ t_list		*ft_strsplit_lstmode_test(char const *s, char c)
 	if (!s)
 		return (NULL);
 	i = 0;
-	while (*s && *s != c)
+	if (*s != c && *s)
 	{
-		printf("%c	\n", *s);
-		printf("WHY AM I HERE ONCE\n");
-		if (*s != c && *s)
+		while (*s && *s != c)
 		{
-			j = 0;
-			len = ft_ln(s, c) + 1;
-			if (!(temp = (char *)malloc(len * sizeof(char))))
+			if (*s != c && *s)
 			{
-				ft_lstdel(&result, ft_bzero);
-				return (NULL);
+				j = 0;
+				len = ft_ln(s, c) + 1;
+				if (!(temp = (char *)malloc(len * sizeof(char))))
+				{
+					ft_lstdel(&result, ft_bzero);
+					return (NULL);
+				}
+				if (!(result = ft_lstnew(temp, len)))
+				{
+					ft_lstdel(&ptr_result, ft_bzero);
+					return (NULL);
+				}
+				while (*s != c && *s)
+					*(temp + j++) = *(s++);
+				*(temp + j) = '\0';
+				result->content = temp;
 			}
-			if (!(result = ft_lstnew(temp, len)))
-			{
-				ft_lstdel(&ptr_result, ft_bzero);
-				return (NULL);
-			}
-			while (*s != c && *s)
-				*(temp + j++) = *(s++);
-			*(temp + j) = '\0';
-			result->content = temp;
 		}
 	}
-	printf("Adress		%p\n", result);
-	printf("CONTENT		%s\n", result->content);
-	printf("SIZE		%zu\n", result->content_size);
-	//printf("HERE MAIN\n");
+	else 
+	{
+		while (*s)
+		{
+			if (*s != c && *s)
+			{
+				j = 0;
+				len = ft_ln(s, c) + 1;
+				if (!(temp = (char *)malloc(len * sizeof(char))))
+				{
+					ft_lstdel(&ptr_result, ft_bzero);
+					return (NULL);
+				}
+				if (!(result->next = ft_lstnew(temp, len)))
+				{
+					ft_lstdel(&ptr_result, ft_bzero);
+					return (NULL);
+				}
+				while (*s != c && *s)
+					*(temp + j++) = *(s++);
+				*(temp + j) = '\0';
+				result = result->next;
+				result->content = temp;
+				s--;
+			}
+			s++;
+		}
+		if (!(result = ft_lstnew(NULL, 0)))
+			return (NULL);
+	}
 	ptr_result = result;
-	while (*s)
-	{
-		printf("%c	\n", *s);
-		printf("HERE MAIN\n");
-		if (*s != c && *s)
-		{
-			printf("WHY AM I HERE ONCE\n");
-			j = 0;
-			len = ft_ln(s, c) + 1;
-			if (!(temp = (char *)malloc(len * sizeof(char))))
-			{
-				ft_lstdel(&ptr_result, ft_bzero);
-				return (NULL);
-			}
-			if (!(result->next = ft_lstnew(temp, len)))
-			{
-				ft_lstdel(&ptr_result, ft_bzero);
-				return (NULL);
-			}
-			while (*s != c && *s)
-				*(temp + j++) = *(s++);
-			*(temp + j) = '\0';
-			result = result->next;
-			result->content = temp;
-			s--;
-		}
-		s++;
-	}
-	printf("(((HERE)))\n");
-	printf("Adress		%p\n", result);
-	if (!result)
-	{
-		printf("((((((HERE)))\n");
-		return (NULL);
-	}
-	else
-	{
-		printf("HMM\n");
-		result->next = NULL;
-	}
+	
 	return (ptr_result);
 }
 
@@ -554,19 +542,19 @@ int	main(void)
 	printf("L3 content_size		%zu\n", test->next->next->content_size);
 	printf("L4 adress		%p\n", test->next->next->next);
 
-	//char *new = "asdffadshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk";
-	//char *new1 = "";
-	//char *new2 = "***dddd****";
-	char *new3 = "***";
-	/*char	**arr = ft_strsplit(new, '*');
+	char *new = "asdff\0adshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk";
+	/*char *new1 = "";
+	char *new2 = "***dddd****";
+	char *new3 = "***"; */
+	char	**arr = ft_strsplit(new, 'a');
 	while (*arr)
 	{
 		ft_putendl(*arr);
 		arr++;
 	}
 
-	t_list *strsplit;*/
-	/*strsplit = ft_strsplit_lstmode_test(new, '*');
+	t_list *strsplit;
+	strsplit = ft_strsplit_lstmode_test(new, 'a');
 	while (strsplit)
 	{
 		printf("Adress		%p\n", strsplit);
@@ -574,9 +562,10 @@ int	main(void)
 		printf("SIZE		%zu\n", strsplit->content_size);
 		strsplit = strsplit->next;
 	}
-	*/
-	t_list *strsplit2;
-	strsplit2 = ft_strsplit_lstmode_test(new3, '*');
+	
+	/* не надо создават NULL-ячейку, если это первый символ */
+	/*t_list *strsplit2;
+	strsplit2 = ft_strsplit_lstmode_test(new1, '*');
 	while (strsplit2)
 	{
 		printf("Adress		%p\n", strsplit2);
@@ -585,7 +574,7 @@ int	main(void)
 		strsplit2 = strsplit2->next;
 	}
 	t_list *strsplit3;
-	strsplit3 = ft_strsplit_lstmode_test(new3, '*');
+	strsplit3 = ft_strsplit_lstmode_test(new2, '*');
 	while (strsplit3)
 	{
 		printf("Adress		%p\n", strsplit3);
@@ -593,6 +582,15 @@ int	main(void)
 		printf("SIZE		%zu\n", strsplit3->content_size);
 		strsplit3 = strsplit3->next;
 	}
+	t_list *strsplit4;
+	strsplit4 = ft_strsplit_lstmode_test(new3, '*');
+	while (strsplit4)
+	{
+		printf("Adress		%p\n", strsplit4);
+		printf("CONTENT		%s\n", strsplit4->content);
+		printf("SIZE		%zu\n", strsplit4->content_size);
+		strsplit4 = strsplit4->next;
+	} */
 	/*printf("DELETING THE WHOLE LIST\n");
 	printf("BEFORE DEL\n");
 	printf("L1 adress		%p\n", test);
