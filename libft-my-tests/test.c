@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: boriskantorovich <boriskantorovich@stud    +#+  +:+       +#+        */
+/*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/13 18:12:59 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/18 07:52:16 by boriskantor      ###   ########.fr       */
+/*   Updated: 2019/07/18 11:04:36 by dfisher          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,7 @@ static size_t	ft_ln(const char *s, char c)
 		index++;
 	return (index);
 }
-
+/*
 t_list		*ft_strsplit_lstmode_test(char const *s, char c)
 {
 	t_list	*result;
@@ -271,7 +271,7 @@ t_list		*ft_strsplit_lstmode_test(char const *s, char c)
 			}
 		}
 	}
-	else 
+	else
 	{
 		while (*s)
 		{
@@ -302,11 +302,247 @@ t_list		*ft_strsplit_lstmode_test(char const *s, char c)
 			return (NULL);
 	}
 	ptr_result = result;
-	
+
+	return (ptr_result);
+}
+*/
+
+t_list		*ft_strsplit_lstmode(char const *s, char c)
+{
+	t_list	*result;
+	t_list	*ptr_result;
+	char	*temp;
+	int		j;
+	size_t	len;
+
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s != c)
+			break ;
+		s++;
+	}
+	if (!*s)
+		return (NULL);
+	if (!(result = ft_lstnew(NULL, 0)))
+			return (NULL);
+	if (*s != c && *s)
+	{
+		while (*s && *s != c)
+		{
+			if (*s != c && *s)
+			{
+				j = 0;
+				len = ft_ln(s, c) + 1;
+				if (!(temp = (char *)malloc(len * sizeof(char))))
+				{
+					ft_lstdel(&result, ft_bzero);
+					return (NULL);
+				}
+				if (!(result = ft_lstnew(temp, len)))
+				{
+					ft_lstdel(&ptr_result, ft_bzero);
+					return (NULL);
+				}
+				while (*s != c && *s)
+					*(temp + j++) = *(s++);
+				*(temp + j) = '\0';
+				result->content = temp;
+			}
+		}
+	}
+	ptr_result = result;
+	while (*s)
+	{
+		if (*s != c && *s)
+		{
+			j = 0;
+			len = ft_ln(s, c) + 1;
+			if (!(temp = (char *)malloc(len * sizeof(char))))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
+			if (!(result->next = ft_lstnew(temp, len)))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
+			while (*s != c && *s)
+				*(temp + j++) = *(s++);
+			*(temp + j) = '\0';
+			result = result->next;
+			result->content = temp;
+			s--;
+		}
+		s++;
+	}
 	return (ptr_result);
 }
 
+/*
+t_list		*ft_strsplit_lstmode(char const *s, char c)
+{
+	t_list	*result;
+	t_list	*ptr_result;
+	char	*temp;
+	int		j;
+	size_t	len;
 
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s != c)
+			break ;
+		s++;
+	}
+	if (!*s)
+		return (NULL);
+	if (!(result = ft_lstnew(NULL, 0)))
+			return (NULL);
+	if (*s != c && *s)
+	{
+		while (*s && *s != c)
+		{
+			if (*s != c && *s)
+			{
+				j = 0;
+				len = ft_ln(s, c) + 1;
+				if (!(temp = (char *)malloc(len * sizeof(char))))
+				{
+					ft_lstdel(&result, ft_bzero);
+					return (NULL);
+				}
+				if (!(result = ft_lstnew(temp, len)))
+				{
+					ft_lstdel(&ptr_result, ft_bzero);
+					return (NULL);
+				}
+				while (*s != c && *s)
+					*(temp + j++) = *(s++);
+				*(temp + j) = '\0';
+				result->content = temp;
+			}
+		}
+	}
+	ptr_result = result;
+	while (*s)
+	{
+		if (*s != c && *s)
+		{
+			j = 0;
+			len = ft_ln(s, c) + 1;
+			if (!(temp = (char *)malloc(len * sizeof(char))))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
+			if (!(result->next = ft_lstnew(temp, len)))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
+			while (*s != c && *s)
+				*(temp + j++) = *(s++);
+			*(temp + j) = '\0';
+			result = result->next;
+			result->content = temp;
+			s--;
+		}
+		s++;
+	}
+	return (ptr_result);
+}
+
+*/
+/*
+t_list		*ft_strsplit_lstmode_null(char const *s, char c)
+{
+	t_list	*result;
+	t_list	*ptr_result;
+	char	*temp;
+	int		j;
+	size_t	len;
+
+
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		printf("## piu piu\n");
+		printf("## %c\n", c);
+		printf("## %s\n", s);
+		if (*s != c)
+		{
+			printf("## break piu piu\n");
+			printf("## %s\n", s);
+			break ;
+		}
+		s++;
+	}
+	printf("## hmm %s\n", s);
+
+	if (!*s)
+		return (NULL);
+	if (!(result = ft_lstnew(NULL, 0)))
+			return (NULL);
+	//ptr_result = result;
+	if (*s != c && *s)
+	{
+		while (*s && *s != c)
+		{
+			if (*s != c && *s)
+			{
+				j = 0;
+				len = ft_ln(s, c) + 1;
+				if (!(temp = (char *)malloc(len * sizeof(char))))
+				{
+					ft_lstdel(&result, ft_bzero);
+					return (NULL);
+				}
+				if (!(result = ft_lstnew(temp, len)))
+				{
+					ft_lstdel(&ptr_result, ft_bzero);
+					return (NULL);
+				}
+				while (*s != c && *s)
+					*(temp + j++) = *(s++);
+				*(temp + j) = '\0';
+				result->content = temp;
+			}
+		}
+	}
+	ptr_result = result;
+	while (*s)
+	{
+		if (*s != c && *s)
+		{
+			j = 0;
+			len = ft_ln(s, c) + 1;
+			if (!(temp = (char *)malloc(len * sizeof(char))))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
+			if (!(result->next = ft_lstnew(temp, len)))
+			{
+				ft_lstdel(&ptr_result, ft_bzero);
+				return (NULL);
+			}
+			while (*s != c && *s)
+				*(temp + j++) = *(s++);
+			*(temp + j) = '\0';
+			result = result->next;
+			result->content = temp;
+			s--;
+		}
+		s++;
+	}
+	return (ptr_result);
+}
+*/
 
 int	main(void)
 {
@@ -542,27 +778,79 @@ int	main(void)
 	printf("L3 content_size		%zu\n", test->next->next->content_size);
 	printf("L4 adress		%p\n", test->next->next->next);
 
-	char *new = "asdff\0adshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk";
-	/*char *new1 = "";
-	char *new2 = "***dddd****";
-	char *new3 = "***"; */
-	char	**arr = ft_strsplit(new, 'a');
-	while (*arr)
-	{
-		ft_putendl(*arr);
-		arr++;
-	}
-
+	//char *new = "asdff\0adshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk";
+	/*char *new = "asdffadshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk";
+	printf("RESULT\n");
 	t_list *strsplit;
-	strsplit = ft_strsplit_lstmode_test(new, 'a');
+
+	int k;
+	k = 0;
+	strsplit = ft_strsplit_lstmode_null(new, '*');
 	while (strsplit)
 	{
-		printf("Adress		%p\n", strsplit);
-		printf("CONTENT		%s\n", strsplit->content);
-		printf("SIZE		%zu\n", strsplit->content_size);
+		printf("Adress of node:		%p\n", strsplit);
+		printf("Word #%d:			%s\n", k, strsplit->content);
+		printf("Size of word #%d:		%zu\n", k, strsplit->content_size);
 		strsplit = strsplit->next;
+		k++;
 	}
-	
+	*/
+	char new[6][100] = {
+		"asdff\0adshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk",
+		"",
+		"***dddd****",
+		"***",
+		"*asdffadshjk*****fsd ajj 7&&***coucou***dddd****dfklkfsdl***sfdk",
+		"\t\n\nsadfjkgladfgjsakjgjkgfadhjkgfhjkagskhjgafkakgfjkgfjkh"
+		};
+	int chars[6] = {
+		'*',
+		'^',
+		'\n',
+		'\0',
+		'a',
+		'k'
+	};
+	int i = 0;
+	int k;
+	int j;
+	while (i < 6)
+	{
+		t_list *strsplit;
+		j = 0;
+		while (j < 6)
+		{
+			printf("\n\nTEST of %s #%d\n", new[i], j);
+			k = 0;
+			printf("char to split with:		%c\n", chars[j]);
+			strsplit = ft_strsplit_lstmode(new[i], chars[j]);
+			printf("RESULT\n");
+			while (strsplit)
+			{
+				printf("Adress of node:		%p\n", strsplit);
+				printf("Word #%d:			%s\n", k, strsplit->content);
+				printf("Size of word #%d:		%zu\n", k, strsplit->content_size);
+				strsplit = strsplit->next;
+				k++;
+			}
+			j++;
+		}
+		i++;
+	}
+	printf("\n\nTEST of NULL\n");
+	char *strnul = NULL;
+	t_list *strsplit2;
+
+	k = 0;
+	strsplit2 = ft_strsplit_lstmode(strnul, '*');
+	while (strsplit2)
+	{
+		printf("Adress of node:		%p\n", strsplit2);
+		printf("Word #%d:			%s\n", k, strsplit2->content);
+		printf("Size of word #%d:		%zu\n", k, strsplit2->content_size);
+		strsplit2 = strsplit2->next;
+		k++;
+	}
 	/* не надо создават NULL-ячейку, если это первый символ */
 	/*t_list *strsplit2;
 	strsplit2 = ft_strsplit_lstmode_test(new1, '*');
