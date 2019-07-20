@@ -6,7 +6,7 @@
 /*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/13 18:12:59 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/18 13:15:05 by dfisher          ###   ########.fr       */
+/*   Updated: 2019/07/20 13:42:46 by dfisher          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ t_list		*ft_lstmap_test(t_list *lst, t_list *(*f)(t_list *elem))
 	return (index);
 }
 */
+/*
 static size_t	ft_ln(const char *s, char c)
 {
 	int index;
@@ -233,6 +234,7 @@ static size_t	ft_ln(const char *s, char c)
 		index++;
 	return (index);
 }
+*/
 /*
 t_list		*ft_strsplit_lstmode_test(char const *s, char c)
 {
@@ -319,32 +321,115 @@ t_list		*ft_strsplit_lstmode_test(char const *s, char c)
 			return (NULL);
 		}
 		*/
-t_list		*ft_strslpit_first_word(char const *s, char c)
-{
-	t_list	*result;
-	char	*temp;
-	int		j;
-	size_t	len;
 
-	if (!(result = ft_lstnew(NULL, 0)))
-		return (NULL);
-	if (*s != c && *s)
+/*
+void	ft_free_arr_of_str(char **arr)
+{
+	int size;
+	char **ptr_arr;
+
+	ptr_arr = arr;
+	size = -1;
+	while (*ptr_arr++)
 	{
-		j = 0;
-		len = ft_ln(s, c) + 1;
-		if (!(temp = (char *)malloc(len * sizeof(char))))
-			return (NULL);
-		if (!(result = ft_lstnew(temp, len)))
-			return (NULL);
-		while (*s != c && *s)
-			*(temp + j++) = *(s++);
-		*(temp + j) = '\0';
-		result->content = temp;
-		free(temp);
+		size++;
 	}
-	return (result);
+	if (arr && *arr)
+	{
+		while (size >= 0)
+		{
+			free(arr[size]);
+			arr[size] = NULL;
+			size--;
+		}
+		free(arr);
+		arr = NULL;
+	}
 }
 
+t_list		*ft_lst_from_charr(char **arr)
+{
+	t_list	*lst_iter;
+	t_list	*root_ptr;
+	t_list	*last_ptr;
+
+	lst_iter = NULL;
+	root_ptr = NULL;
+	last_ptr = NULL;
+	while(*arr)
+	{
+		if (!lst_iter)
+		{
+			if(!(lst_iter = ft_lstnew(*arr, ft_strlen(*arr++) + 1)))
+			{
+				ft_lstdel(&root_ptr, ft_bzero);
+				return (NULL);
+			}
+			if (!root_ptr)
+				root_ptr = lst_iter;
+			if (last_ptr)
+				last_ptr->next = lst_iter;
+		}
+		last_ptr = lst_iter;
+		lst_iter = lst_iter->next;
+		arr++;
+	}
+	return (root_ptr);
+}
+
+t_list		*ft_strsplit_lst(char const *s, char c)
+{
+	t_list	*result;
+	char	**arr;
+
+	if (!s)
+		return (NULL);
+	if (!(arr = ft_strsplit(s, c)))
+		return (NULL);
+	result = ft_create_lst_from_arr(arr);
+	free_arr_of_str(arr);
+	return (result);
+}
+*/
+/*
+t_list		*ft_strsplit_lst(char const *s, char c)
+{
+	t_list	*lst_iter;
+	t_list	*root_ptr;
+	t_list	*last_ptr;
+	char	**arr;
+	char	**ptr_arr;
+
+	if (!s)
+		return (NULL);
+	arr = ft_strsplit(s, c);
+	ptr_arr = arr;
+	lst_iter = NULL;
+	root_ptr = NULL;
+	last_ptr = NULL;
+	while(*arr)
+	{
+		if (!lst_iter)
+		{
+			if(!(lst_iter = ft_lstnew(*arr, ft_strlen(*arr) + 1)))
+			{
+				ft_lstdel(&root_ptr, ft_bzero);
+				return (NULL);
+			}
+			if (!root_ptr)
+				root_ptr = lst_iter;
+			if (last_ptr)
+				last_ptr->next = lst_iter;
+		}
+		last_ptr = lst_iter;
+		lst_iter = lst_iter->next;
+		arr++;
+	}
+	free_arr_of_str(ptr_arr);
+	return (root_ptr);
+}
+*/
+/*
 t_list		*ft_strsplit_lstmode(char const *s, char c)
 {
 	t_list	*result;
@@ -393,11 +478,11 @@ t_list		*ft_strsplit_lstmode(char const *s, char c)
 			j = 0;
 			len = ft_ln(s, c);
 			temp = ft_strnew(len);
-			/*if (temp == NULL)
+			if (temp == NULL)
 			{
 				ft_lstdel(&ptr_result, ft_bzero);
 				return (NULL);
-			}*/
+			}
 			printf("===RESULT2===\n");
 			printf("Adress of node:		%p\n", result);
 			printf("Word:			%s\n",  result->content);
@@ -439,7 +524,7 @@ t_list		*ft_strsplit_lstmode(char const *s, char c)
 	printf("Adress of node:		%p\n", ptr_result->next);
 	return (ptr_result);
 }
-
+*/
 /*
 t_list		*ft_strsplit_lstmode(char const *s, char c)
 {
@@ -873,20 +958,20 @@ int	main(void)
 	int i = 0;
 	int k;
 	int j;
-	while (i < 1)
+	while (i < 6)
 	{
 		t_list *strsplit;
 		j = 0;
-		while (j < 1)
+		while (j < 6)
 		{
 			printf("\n\nMAIN TEST of %s #%d\n", new[i], j);
 			k = 1;
 			printf("char to split with:		%c\n", chars[j]);
-			strsplit = ft_strsplit_lstmode(new[i], chars[j]);
+			strsplit = ft_strsplit_lst(new[i], chars[j]);
 			printf("RESULT\n");
 			while (strsplit)
 			{
-				printf("Adress of node:		%p\n", strsplit);
+				printf("Address of node:		%p\n", strsplit);
 				printf("Word #%d:			%s\n", k, strsplit->content);
 				printf("Size of word #%d:		%zu\n", k, strsplit->content_size);
 				strsplit = strsplit->next;
@@ -901,7 +986,7 @@ int	main(void)
 	t_list *strsplit2;
 
 	k = 0;
-	strsplit2 = ft_strsplit_lstmode(strnul, '*');
+	strsplit2 = ft_strsplit_lst(strnul, '*');
 	while (strsplit2)
 	{
 		printf("Adress of node:		%p\n", strsplit2);

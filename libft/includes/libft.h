@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: boriskantorovich <boriskantorovich@stud    +#+  +:+       +#+        */
+/*   By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/25 11:06:02 by dfisher           #+#    #+#             */
-/*   Updated: 2019/07/18 07:52:11 by boriskantor      ###   ########.fr       */
+/*   Updated: 2019/07/20 13:50:11 by dfisher          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ char				*ft_strsub(char const *s, unsigned int start, size_t len);
 char				*ft_strtrim(char const *s);
 int					ft_tolower(int c);
 int					ft_toupper(int c);
-void				ft_strset(char *b, int c, size_t len);
-
 
 typedef struct		s_list
 {
@@ -89,6 +87,7 @@ void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 void				ft_lstdelone(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstadd(t_list **alst, t_list *new);
-t_list				*ft_strsplit_lstmode(char const *s, char c);
+void				ft_strset(char *b, int c, size_t len);
+t_list				*ft_strsplit_lst(char const *s, char c);
 
 #endif
