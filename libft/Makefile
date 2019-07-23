@@ -6,7 +6,7 @@
 #    By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/06/26 18:02:18 by dfisher           #+#    #+#              #
-#    Updated: 2019/07/23 16:37:01 by dfisher          ###   ########.fr        #
+#    Updated: 2019/07/23 19:38:41 by dfisher          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -87,8 +87,8 @@ $(NAME): $(OBJ_NAME)
 	ar rc $(NAME) $(OBJ_NAME)
 	ranlib $(NAME)
 
-$(OBJ_NAME):
-	$(CC)  $(CFLAGS) -c $(SRC_NAME) -I $(HEADER_DIR)
+%.o: %.c
+	$(CC)  $(CFLAGS) -c -I $(HEADER_DIR) $<
 
 clean:
 	rm -fv $(OBJ_NAME)
@@ -99,4 +99,4 @@ fclean: clean
 re: fclean all
 
 norme:
-	norminette -R CheckForbiddenSourceHeader
+	norminette
