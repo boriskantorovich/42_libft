@@ -6,7 +6,7 @@
 #    By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/06/26 18:02:18 by dfisher           #+#    #+#              #
-#    Updated: 2019/07/21 16:12:02 by dfisher          ###   ########.fr        #
+#    Updated: 2019/07/21 16:11:37 by dfisher          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,20 +80,16 @@ SRC_NAME = ft_atoi.c \
 		ft_strsplit_lst.c
 OBJ_NAME = ${SRC_NAME:%.c=%.o}
 HEADER_DIR = .
+OBJ_DIR = obj
 
-all: $(NAME)
+all: compile
 
-$(NAME): $(OBJ_NAME)
-	ar rc $(NAME) $(OBJ_NAME)
-	ranlib $(NAME)
+$(NAME): $(OBJ) $(HEADER_DIR)libft.h
+	@echo "Linking library $(NAME).\n"
+	ar rcs $@ $^
+	@echo "  ✧ $(AR) $(ARFLAGS) $@ object files: OK! √\n"
 
-$(OBJ_NAME):
-	$(CC)  $(CFLAGS) -c $(SRC_NAME) -I $(HEADER_DIR)
-
-clean:
-	rm -fv $(OBJ_NAME)
-
-fclean: clean
-	rm -fv $(NAME)
-
-re: fclean all
+compile:
+	mkdir -p $(OBJ_DIR)
+	$(MAKE) $(SRC_NAME)
+	$(MAKE) $(NAME)
