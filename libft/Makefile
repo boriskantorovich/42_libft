@@ -6,7 +6,7 @@
 #    By: dfisher <dfisher@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/06/26 18:02:18 by dfisher           #+#    #+#              #
-#    Updated: 2019/07/21 16:12:02 by dfisher          ###   ########.fr        #
+#    Updated: 2019/07/23 16:37:01 by dfisher          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -97,3 +97,6 @@ fclean: clean
 	rm -fv $(NAME)
 
 re: fclean all
+
+norme:
+	norminette -R CheckForbiddenSourceHeader
